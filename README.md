@@ -95,6 +95,7 @@ shouldComponentUpdate：memo
     }
     ```
 * useCallback
+  - 依赖尽量不使用 state，可以考虑使用ref，见useEventCallback
     ```jsx
     function ProductPage({ productId }) {
         // ✅ 用 useCallback 包裹以避免随渲染发生改变
@@ -239,12 +240,12 @@ shouldComponentUpdate：memo
 
 
 ## 7.需要关注依赖的 hook
-> 依赖变量应该在 state 或 prop 上
+> 依赖变量应该在 state / prop / ref 上
 * useEffect
 * useMemo
 * useCallback
-* useLayoutEffect
 * useImperativeHandle
+* useLayoutEffect
 
 ## 8. 性能
 ### 8.1 React.memo VS PureComponent
@@ -260,7 +261,7 @@ const Button = React.memo((props) => {
 * React.memo 可以指定第二个参数（比较函数），比较函数来比较新旧 props。如果函数返回 true，就会跳过更新
 
 ### 8.2 useMemo VS useCallback
-
+- useCallback(fn, deps) 相当于 useMemo(() => fn, deps)
 - useMemo 用于缓存 prop 上传递的对象、变量等，或者缓存渲染用组件，渲染组件A只依赖a属性，渲染组件B只依赖b属性
 - useCallback 用于缓存 prop 上传递的 callback
 

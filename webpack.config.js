@@ -7,6 +7,7 @@ const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 module.exports = {
     output: {
         path: path.resolve('dist'),
+        publicPath: '/',
     },
     devtool: "source-map",
     resolve: {
@@ -22,7 +23,18 @@ module.exports = {
                 options: {
                     configFile: path.resolve(__dirname, './tsconfig.json')
                 }
-            }
+            },
+            {
+                test: /\.css?$/,
+                use: [
+                    {
+                        loader: 'style-loader',
+                    },
+                    {
+                        loader: 'css-loader',
+                    }
+                ]
+            },
         ],
     },
     plugins: [
@@ -36,10 +48,10 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin(),
     ],
-    devServer: { // 默认热更新
+    devServer: {
         port: 3000,
-        historyApiFallback: true,
         open: true,
         hot: true,
+        historyApiFallback: true,
     }
 };
