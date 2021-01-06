@@ -20,7 +20,7 @@ import DemoUseClientRect from './demos/useClientRect';
 import DemoUseImperativeHandle from './demos/useImperativeHandle';
 import DemoUseDebugValue from './demos/useDebugValue';
 
-const App: FC = props => {
+const App: FC = () => {
     return <Layout>
         <Switch>
             <Route path='/demo/use/state' component={DemoUseState} />
