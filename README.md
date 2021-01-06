@@ -6,11 +6,13 @@
 ## 2.hook 优点
 * 没有 this 实例，不用再 bind 了
 * 能覆盖大部分常用 class 组件生命周期哦
-* 逻辑方便复用，自定义 hook
+* 复用，逻辑方便复用，自定义 hook， 解决在组件之间复用状态逻辑很难问题
+* 生命周期，可以放在一起了，不用拆分写
 
 ## 3.hook 缺点
 * 无 getSnapshotBeforeUpdate，getDerivedStateFromError 和 componentDidCatch 生命周期的 Hook 等价写法
 * 生态没有 class 完善
+* 学习成本
 
 ## 4. 生态
 - React Redux 从 v7.1.0 开始支持 Hook API 并暴露了 useDispatch 和 useSelector 等 hook （TODO: 需要继续调研）
@@ -79,7 +81,19 @@ shouldComponentUpdate：memo
     }
     ```
 * useReducer
-    - 一个 state 依赖于另一个 state
+    - 简化版本 by useState
+    ```jsx
+    function useReducer(reducer, initialState) {
+      const [state, setState] = useState(initialState);
+
+      function dispatch(action) {
+        const nextState = reducer(state, action);
+        setState(nextState);
+      }
+
+      return [state, dispatch];
+    }
+    ```
 * useCallback
     ```jsx
     function ProductPage({ productId }) {
@@ -259,6 +273,26 @@ const Button = React.memo((props) => {
 const [rows, setRows] = useState(() => createRows(props.count));
 ```
 
+### 8.4 避免向下传递回调函数
+- 在大型的组件树中，我们推荐的替代方案是通过 context 用 useReducer 往下传一个 `dispatch` 函数
+- `dispatch` 不会在重新渲染之间变化，dispatch context 永远不会变，因此组件通过读取它就不需要重新渲染了
+- 如果要通过context传递 state，建议和 dispatch context 区分开，使用2个context  TODO: 没懂 ？？
+
+```jsx
+const TodosDispatch = React.createContext(null);
+
+function TodosApp() {
+  // 提示：`dispatch` 不会在重新渲染之间变化
+  const [todos, dispatch] = useReducer(todosReducer);
+
+  return (
+    <TodosDispatch.Provider value={dispatch}>
+      <DeepTree todos={todos} />
+    </TodosDispatch.Provider>
+  );
+}
+```
+
 ## 9.常见小坑
 
 1. 死循环
@@ -266,3 +300,4 @@ const [rows, setRows] = useState(() => createRows(props.count));
 2. 变量获取错误
     - ref
     - setState callback
+
