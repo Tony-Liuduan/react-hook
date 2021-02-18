@@ -1,5 +1,7 @@
 # react-hook
 
+> https://juejin.cn/post/6844904165500518414
+
 ## 1.hook & class 差异
 * 更新一个 state 变量，我们会 替换 它的值。这和 class 中的 this.setState 不一样，后者会把更新后的字段 合并 入对象中
 
@@ -131,6 +133,7 @@ shouldComponentUpdate：memo
         }
         ```
 * useRef 
+    - 最佳实践: 空依赖时异步回调中使用
     - 衍生 usePrevious 能通过 ref.current 获取上一轮的 props 或 state
         ```jsx
         function Counter() {
